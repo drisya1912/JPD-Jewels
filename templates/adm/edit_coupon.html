@@ -1,0 +1,54 @@
+{% extends 'adm/base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="card p-5 m-auto w-50">
+            <form method="POST" action="{% url 'edit_coupon-action' %}" onsubmit="return validateForm()">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{ coupon.id }}">
+
+                <div class="mb-3">
+                    <label for="code" class="form-label">Coupon Code:</label>
+                    <input type="text" class="form-control" name="code" id="code" value="{{ coupon.code }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="discount_amount" class="form-label">Discount Amount:</label>
+                    <input type="number" class="form-control" name="discount_amount" value="{{ coupon.discount }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="valid_to" class="form-label">Valid To:</label>
+                    <input type="datetime-local" class="form-control" name="valid_to" value="{{ coupon.valid_to|date:'Y-m-d\TH:i' }}" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Edit Coupon</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function validateForm() {
+            var codeInput = document.getElementById('code');
+            var codeValue = codeInput.value.trim();
+
+            // Check if the coupon code starts with a character and doesn't contain spaces at the beginning
+            if (!/^[a-zA-Z][a-zA-Z0-9\s]*$/.test(codeValue)) {
+                alert("Coupon code should start with a character, and only contain alphanumeric characters with spaces allowed between words.");
+                return false; // Prevent form submission
+            }
+
+            var discountAmountInput = document.getElementsByName('discount_amount')[0];
+            var discountAmountValue = parseFloat(discountAmountInput.value);
+
+            // Check if the discount amount is a positive number
+            if (isNaN(discountAmountValue) || discountAmountValue <= 0) {
+                alert("Discount amount should be a positive number greater than zero.");
+                return false; // Prevent form submission
+            }
+
+            // If everything is valid, allow the form submission
+            return true;
+        }
+    </script>
+{% endblock %}

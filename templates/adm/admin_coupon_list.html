@@ -1,0 +1,43 @@
+{% extends 'admin/base.html' %}
+
+{% load static %}
+{% block title %}Profile | JPDJewels{% endblock %}
+{% block content %}
+
+  <h1>Coupon Management</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Coupon Code</th>
+        <th>Discount Amount</th>
+        <th>Valid From</th>
+        <th>Valid To</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for coupon in coupons %}
+        <tr>
+          <td>{{ coupon.code }}</td>
+          <td>{{ coupon.discount_amount }}</td>
+          <td>{{ coupon.valid_from }}</td>
+          <td>{{ coupon.valid_to }}</td>
+          <td>{% if coupon.is_active %}
+                {{ "Active" }}
+            {% else %}
+                {{ "Inactive" }}
+            {% endif %}
+          </td>
+          <td>
+{#            <a href="{% url 'admin_toggle_coupon' coupon.id %}">Toggle Status</a>#}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <a href="{% url 'addcouponaction' %}">Add Coupon</a>
+
+{% endblock %}

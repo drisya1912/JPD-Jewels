@@ -1,0 +1,44 @@
+{% extends 'adm/base.html' %}
+
+{% block content %}
+
+
+<div class="container">
+    <div class="my-5 p-3 bg-white border border-dark rounded">
+        <h2 class="fw-bold">Product</h2>
+
+        <table class="table">
+            <tr>
+                <th>Sl.no</th>
+                <th>Product Name</th>
+                <th>product img</th>
+                <th>Brand</th>
+                <th>Category</th>
+                <th>Stocks</th>
+                <th>View</th>
+            </tr>
+            {% for pro in product %}
+
+            {% if pro.active %}
+            <tr>
+            {% else %}
+            <tr style="background-color: #b5b5b5">
+            {% endif %}
+                <th>{{ forloop.counter }}</th>
+                <th>{{ pro.Product_name }}</th>
+                <th> <img src="{{ pro.img1.url }}" style="width: auto; height: 100px;"></th>
+                <th>{{ pro.Brand }}</th>
+                <th>{{ pro.Category }}</th>
+                <th>{{ pro.Stock }}</th>
+                <th><a href="{% url 'productdtl' pro.id %}" class="btn btn-primary">View</a></th>
+            </tr>
+
+            {% endfor %}
+        </table>
+    <div class="d-flex justify-content-end">
+        <a href="{% url 'productadd' %}" class="btn btn-primary">Add Product</a>
+    </div>
+    </div>
+</div>
+
+{% endblock %}

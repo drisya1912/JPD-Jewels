@@ -1,0 +1,40 @@
+{% extends 'adm/base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="card p-5 m-auto w-50">
+            <form action="{% url 'addbrandaction' %}" method="post" class="px-5" onsubmit="return validateForm()">
+                {% csrf_token %}
+                <h3 class="text-center py-2">Add Brand</h3>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+                            <strong>Error! :</strong>{{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                <input type="text" required name="brand" id="brand" class="form-control">
+                <input type="submit" class="btn btn-success my-2" value="Add Brand">
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function validateForm() {
+            var brandInput = document.getElementById('brand');
+            var brandValue = brandInput.value.trim();
+
+            // Check if the brand name contains only letters (characters)
+            if (!/^[a-zA-Z]+$/.test(brandValue)) {
+                alert("Brand name can only contain letters (characters) with no spaces or special characters.");
+                return false; // Prevent form submission
+            }
+
+            // If everything is valid, allow the form submission
+            return true;
+        }
+    </script>
+{% endblock %}

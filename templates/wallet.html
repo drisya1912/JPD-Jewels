@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        #balance {
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        #transaction-history {
+            margin-bottom: 20px;
+        }
+
+        #add-funds-form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        label {
+            margin-bottom: 8px;
+        }
+
+        input {
+            padding: 8px;
+            margin-bottom: 12px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Your Wallet</h1>
+
+    <div id="balance">
+        <p>Balance: ${{ total_balance }}</p>
+    </div>
+
+    <div id="transaction-history">
+        <h2>Transaction History</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Transatiion ID</th>
+                    <th>Returned Date</th>
+                    <th>Credit/Debit</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for wallet in wallet %}
+                    <tr>
+                        <td>{{ wallet.transaction_id }}</td>
+                        <td>{{ wallet.balance_returned }}</td>
+                        <td>{{ wallet.balance_type }}</td>
+                        <td>${{ wallet.amount }}</td>
+                    </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+
+
+</body>
+</html>

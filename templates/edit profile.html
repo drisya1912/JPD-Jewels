@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Edit Profile | JPDJewels{% endblock %}
+{% block content %}
+<div class="profile-edit-container" style="max-width: 800px; margin: 0 auto; padding: 40px; background-color: #f8f9fa; box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); border-radius: 10px;">
+    <h2 style="font-size: 28px; margin-bottom: 30px; color: #343a40;">Edit Profile</h2>
+    <form method="POST" action="{% url 'edit_profileaction' %}" enctype="multipart/form-data" onsubmit="return validateForm()">
+        {% csrf_token %}
+        <div class="form-group" style="margin-bottom: 20px;">
+            <div class="form-group" style="margin-bottom: 20px;">
+            <label for="name" style="font-size: 18px; color: #495057;">Name:</label>
+            <input type="text" id="name" name="name" class="form-control" style="width: 100%; padding: 15px; font-size: 16px;" placeholder="{{ user_profile.user }}" readonly>
+        </div>
+        <div class="form-group" style="margin-bottom: 20px;">
+            <label for="email" style="font-size: 18px; color: #495057;">Email:</label>
+            <input type="email" id="email" name="email" class="form-control" style="width: 100%; padding: 15px; font-size: 16px;" placeholder="{{ user_profile.user.email }}" readonly>
+        </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 20px;">
+            <label for="phone_number" style="font-size: 18px; color: #495057;">Phone Number:</label>
+            <input type="text" id="phone_number" name="phone_number" class="form-control" style="width: 100%; padding: 15px; font-size: 16px;" value="{{ user_profile.phone_number }}">
+            <span id="phone_number_error" style="color: red;"></span>
+        </div>
+        <div class="form-group" style="margin-bottom: 20px;">
+            <label for="address" style="font-size: 18px; color: #495057;">Address:</label>
+            <input type="text" id="address" name="address" class="form-control" style="width: 100%; padding: 15px; font-size: 16px;" value="{{ user_profile.address }}">
+            <span id="address_error" style="color: red;"></span>
+        </div>
+        <div class="form-group" style="margin-bottom: 20px;">
+            <label for="profile_image" style="font-size: 18px; color: #495057;">Profile Image:</label>
+            <input type="file" id="profile_image" name="photo" accept="image/*" class="form-control" style="width: 100%; padding: 15px; font-size: 16px;">
+            <span id="profile_image_error" style="color: red;"></span>
+        </div>
+        <button type="submit" class="btn btn-primary" style="padding: 15px 30px; font-size: 18px; background-color: #007bff; border-color: #007bff; color: #fff;">Save Changes</button>
+    </form>
+
+    <script>
+        function validateForm() {
+            // Phone Number Validation
+            var phone_number = document.getElementById("phone_number").value;
+            if (!isValidPhoneNumber(phone_number)) {
+                document.getElementById("phone_number_error").innerHTML = "Invalid phone number";
+                return false;
+            } else {
+                document.getElementById("phone_number_error").innerHTML = "";
+            }
+
+            // Address Validation
+            var address = document.getElementById("address").value;
+            if (!isValidAddress(address)) {
+                document.getElementById("address_error").innerHTML = "Invalid address";
+                return false;
+            } else {
+                document.getElementById("address_error").innerHTML = "";
+            }
+
+            // Profile Image Validation (optional)
+            var profile_image = document.getElementById("profile_image").value;
+            if (profile_image && !isValidProfileImage(profile_image)) {
+                document.getElementById("profile_image_error").innerHTML = "Invalid profile image";
+                return false;
+            } else {
+                document.getElementById("profile_image_error").innerHTML = "";
+            }
+
+            return true;
+        }
+
+        function isValidPhoneNumber(phone_number) {
+            // Add your phone number validation logic here
+            // Example: Check if the phone number is valid
+            var phoneRegex = /^\d{10}$/;
+            return phoneRegex.test(phone_number);
+        }
+
+        function isValidAddress(address) {
+            // Add your address validation logic here
+            // Example: Check if the address is not empty
+            return address.trim() !== "";
+        }
+
+        function isValidProfileImage(profile_image) {
+            // Add your profile image validation logic here
+            // Example: Check if the file type is allowed
+            var allowedFileTypes = ["jpg", "jpeg", "png"];
+            var extension = profile_image.split('.').pop().toLowerCase();
+            return allowedFileTypes.includes(extension);
+        }
+    </script>
+</div>
+{% endblock %}

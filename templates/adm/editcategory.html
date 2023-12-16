@@ -1,0 +1,44 @@
+{% extends 'adm/base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="card p-5 m-auto w-50">
+            <form action="{% url 'editcategoryaction' %}" method="post" class="px-5" onsubmit="return validateForm()">
+                {% csrf_token %}
+                <h3 class="text-center py-2">Edit Category</h3>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+                            <strong>Error! :</strong>{{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                <input value="{{ category.name }}" type="text" required name="cat" id="cat" class="form-control">
+                <input type="hidden" value="{{ category.id }}" name="id">
+                <input type="submit" class="btn btn-success my-2" value="Edit category">
+            </form>
+        </div>
+    </div>
+
+    <script src="path/to/sweetalert.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="path/to/sweetalert.css">
+
+    <script>
+        function validateForm() {
+            var catInput = document.getElementById('cat');
+            var catValue = catInput.value.trim();
+
+            // Check if the category name starts with a character and doesn't contain spaces at the beginning
+            if (!/^[a-zA-Z][a-zA-Z\s]*$/.test(catValue)) {
+                swal("Error!", "Category name should start with a character and only contain alphanumeric characters with spaces allowed between words.", "error");
+                return false; // Prevent form submission
+            }
+
+            // If everything is valid, allow the form submission
+            return true;
+        }
+    </script>
+{% endblock %}

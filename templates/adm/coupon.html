@@ -1,0 +1,50 @@
+{% extends 'adm/base.html' %}
+{% load static %}
+{% block title %}Profile | JPDJewels{% endblock %}
+{% block content %}
+
+<div class="container">
+    <div class="my-5 p-3 bg-white rounded">
+        <form method="POST" action="{% url 'addcouponaction' %}">
+            {% csrf_token %}
+            <table class="table text-center w-75 m-auto">
+                <tr>
+                    <th>Sl No</th>
+                    <th>Coupon Name</th>
+                    <th>Expiry Date</th>
+                    <th>Discount Price</th>
+                    <th>Action</th>
+                </tr>
+                {% for coupon in coupon %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ coupon.code }}</td>
+                    <td>{{ coupon.expiry_date }}</td>
+                    <td>{{ coupon.discount }}</td>
+                    <td>
+                        <button type="submit" name="edit_coupon_id" value="{{ coupon.id }}" class="btn btn-primary">
+                            <a href="{% url 'edit_coupon' coupon.id %}" style="color: white; text-decoration: none;">Edit</a>
+
+                        </button>
+                        {% if coupon.active %}
+                            <button type="submit" name="toggle_coupon_id" value="{{ coupon.id }}" class="btn btn-danger">
+                                <a href="{% url 'coupon-active' coupon.id %}" style="color: white; text-decoration: none;">Available</a>
+                            </button>
+                        {% else %}
+                            <button type="submit" name="toggle_coupon_id" value="{{ coupon.id }}" class="btn btn-success">
+                                <a href="{% url 'coupon-active' coupon.id %}" style="color: white; text-decoration: none">Non Available</a>
+                            </button>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </form>
+
+        <div class="d-flex justify-content-end w-75 m-auto p-2 px-5">
+            <a href="{% url 'addcouponaction' %}" class="btn btn-primary">Add Coupon</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

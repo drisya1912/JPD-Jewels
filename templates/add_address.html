@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Address{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-12">
+                <div class="card shadow p-4">
+                    <h2 class="mb-4">Add Address</h2>
+                    <form method="post" action="{% url 'add_address' %}" id="addAddressForm" onsubmit="validateForm(event)">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            {{ form.full_name.label_tag }}
+                            {{ form.full_name }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.address.label_tag }}
+                            {{ form.address }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.place.label_tag }}
+                            {{ form.place }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.pincode.label_tag }}
+                            {{ form.pincode }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.phone.label_tag }}
+                            {{ form.phone }}
+                        </div>
+                        <button type="submit" class="btn btn-primary" onclick="validateForm()">Add Address</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    function validateForm(event) {
+        // Prevent the default form submission behavior
+        event.preventDefault();
+
+        // Get values from the form
+        var pincode = document.getElementById('id_pincode').value;
+        var phone = document.getElementById('id_phone').value;
+
+        // Check pin code length
+        if (pincode.length !== 6) {
+            showAlert('Invalid Pin Code', 'Pin code must be 6 digits');
+            return false;
+        }
+
+        // Check phone number length
+        if (phone.length !== 10) {
+            showAlert('Invalid Phone Number', 'Phone number must be 10 digits');
+            return false;
+        }
+
+        // If validation passes, submit the form
+        document.getElementById('addAddressForm').submit();
+    }
+
+    function showAlert(title, text) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'adm/base.html' %}
+
+{% block content %}
+
+
+
+
+<div class="container">
+    <div class="my-5 p-3 bg-white rounded">
+
+        <table class="table text-center w-75 m-auto">
+            <tr>
+                <th>Sl No</th>
+                <th>Category Name</th>
+                <th colspan="2" >Action</th>
+            </tr>
+            {% for cat in cat %}
+
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ cat.name }}</td>
+                <td><a href="{% url 'editcategory' cat.id %}" class="btn btn-primary">Edit</a> </td>
+                <td>
+                    {% if cat.active %}
+                        <a href="{% url 'availabiltycategory' cat.id %}" class="btn btn-danger">Available</a>
+
+                    {% else %}
+                        <a href="{% url 'availabiltycategory' cat.id %}" class="btn btn-success">Non Available</a>
+                    {% endif %}
+                </td>
+            </tr>
+
+            {% endfor %}
+        </table>
+    <div class="d-flex justify-content-end w-75 m-auto p-2 px-5">
+                <a href="{% url 'addcategory' %}" class="btn btn-primary">Add Category</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

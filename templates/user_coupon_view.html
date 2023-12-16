@@ -1,0 +1,132 @@
+<!-- user_coupon_detail.html -->
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Coupon - {{ coupon.coupon_name }}
+{% endblock title %}
+
+{% block content %}
+<style>
+    /* Add your existing styles here */
+    section {
+        display: flex;
+        justify-content: space-around;
+        align-items: stretch;
+        flex-wrap: wrap;
+        padding: 5% 0;
+    }
+
+    .col-sm-6 {
+        flex: 0 0 calc(33.333% - 20px); /* Adjust the width based on your design */
+        margin-bottom: 20px;
+    }
+
+    .dl {
+        background: #f0f0f0;
+        padding: 30px 0;
+        border-radius: 20px;
+        position: relative;
+    }
+
+    .brand,
+    .discount,
+    .descr,
+    .ends,
+    .coupon {
+        text-align: center;
+    }
+
+    .brand h2,
+    .discount,
+    .descr strong,
+    .ends small,
+    .coupon a.open-code {
+        color: #000; /* Adjust the text color based on your design */
+    }
+
+    .discount {
+        font-size: 40px; /* Adjust the font size based on your design */
+    }
+
+    .copy-btn {
+        cursor: pointer;
+        background-color: #3498db;
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 14px;
+        margin-top: 10px;
+    }
+</style>
+    {% if coupons %}
+        <section id="labels">
+            {% for coupon in coupons %}
+                    <div class="col-sm-6">
+                        <div class="dl">
+                            <!-- Your existing coupon content here -->
+                            <div class="brand">
+                                <h2>{{ coupon.code}}</h2>
+                            </div>
+                            <div class="discount {{ coupon.discount }}">
+                                {{ coupon.discount }}
+                                <div class="type">off</div>
+                            </div>
+
+                            <div class="ends">
+                                <small>Expires on: {{ coupon.expiry_date }}</small>
+                            </div>
+                            <div class="coupon {{ coupon.discount_type }}">
+                                <a data-toggle="collapse" href="#code-{{ coupon.id }}" class="open-code"></a>
+                                <div class="container">
+                                    <div class="label">
+                                        Get a code
+                                    </div>
+                                    <div class="copy-text">
+                                        <input type="text" class="text" value="{{ coupon.code }}" readonly/>
+                                        <button><i class="fa fa-clone"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+            {% endfor %}
+    {% endif %}
+
+</section>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let copyButtons = document.querySelectorAll(".copy-text button");
+
+        copyButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+                let container = button.closest(".copy-text");
+                let input = container.querySelector("input.text");
+
+                input.select();
+                document.execCommand("copy");
+
+                // Optionally, you can show an alert or any other feedback to the user
+                alert("Text copied to clipboard!");
+
+                container.classList.add("active");
+                window.getSelection().removeAllRanges();
+
+                setTimeout(function () {
+                    container.classList.remove("active");
+                }, 2500);
+            });
+        });
+    });
+</script>
+
+<!-- ... Your existing HTML code ... -->
+
+
+{% endblock %}

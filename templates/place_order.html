@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Order Confirmation{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                <h2 class="mb-4">Order Confirmation</h2>
+                <p class="text-success">Thank you for your order!</p>
+
+                <!-- Display the selected shipping address -->
+{#                {% for order in order %}#}
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h4 class="card-title">Shipping Address</h4>
+                        <p class="card-text">{{order.user.name}}</p>
+                        <p class="card-text">{{ order.address}}</p>
+                    </div>
+                </div>
+{#                {% endfor %}#}
+
+                <!-- Display the order summary -->
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h4 class="card-title">Order Summary</h4>
+                        {% for order in order.order_items.all %}
+                            <p class="card-text">{{order.product.Product_name}}</p>
+                            <p style="text-align: center; vertical-align: middle;" ><img src="{{ order.product.img1.url }}" alt="" style="width: auto; height: 70px;"></p>
+                        {% endfor %}
+
+                        <hr>
+                        <p class="fw-bold">Total:{{ order.total_paid }}</p>
+                    </div>
+                </div>
+
+                <!-- Display payment method -->
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h4 class="card-title">Payment Method</h4>
+                        <p class="card-text">{{ order.billing_status}}</p>
+                    </div>
+                </div>
+
+                <p class="mt-4"><a href="{% url 'home' %}" class="btn btn-primary">Back to Home</a></p>
+                {% if order.status == 'delivered' %}
+                    <p class="mt-4"><a href="{% url 'initiate_return' order_id=order.id %}" class="btn btn-primary">Return</a></p>
+                {% elif order.status == order.CANCEL %}
+                    <p class="mt-4"><button disabled class="btn btn-primary">Cancelled </button></p>
+                {% elif order.status == order.RETURNED %}
+                    <p class="mt-4"><button disabled class="btn btn-primary">Returned </button></p>
+                {% else %}
+                    <p class="mt-4"><a href="{% url 'cancel_order' order.id %}" class="btn btn-primary">Cancel </a></p>
+                {% endif %}
+            <p class="mt-4"><a href="{% url 'invoice' order.id %}" class="btn btn-primary">invoice </a></p>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

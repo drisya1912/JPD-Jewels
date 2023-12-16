@@ -1,0 +1,42 @@
+{% extends 'adm/base.html' %}
+
+{% block content %}
+
+
+<div class="container">
+    <div class="my-5 p-3 bg-white border border-dark rounded">
+        <h2 class="fw-bold">Product</h2>
+
+        <table class="table">
+            <tr>
+                <th>Sl.no</th>
+                <th>Banner Name</th>
+                <th>banner img</th>
+                <th>View</th>
+                <th>Action</th>
+            </tr>
+            {% for ban in banner %}
+                <tr>
+                <th>{{ forloop.counter }}</th>
+                <th>{{ ban.banner_name }}</th>
+                <th> <img src="{{ ban.img1.url }}" style="width: auto; height: 100px;"></th>
+                <th><a href="{% url 'banner_edit' ban.id %}" class="btn btn-primary">Edit</a></th>
+                <th>
+                    {% if ban.active %}
+                        <a href="{%url 'banner_available' ban.id %}" class="btn btn-danger">Available</a>
+
+                    {% else %}
+                        <a href="{%url 'banner_available' ban.id %}" class="btn btn-success">Non Available</a>
+                    {% endif %}
+                </th>
+            </tr>
+
+            {% endfor %}
+        </table>
+    <div class="d-flex justify-content-end">
+        <a href="{% url 'addbanner' %}" class="btn btn-primary">Add Banner</a>
+    </div>
+    </div>
+</div>
+
+{% endblock %}>

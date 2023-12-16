@@ -1,0 +1,97 @@
+{% extends 'adm/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Sales Graph</h2>
+    <canvas id="salesChart" width="400" height="200"></canvas>
+</div>
+
+<!-- Modal for chart details -->
+<div class="modal fade" id="chartDetailsModal" tabindex="-1" role="dialog" aria-labelledby="chartDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="chartDetailsModalLabel">Chart Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Place the chart details here -->
+                <div id="chartDetailsContent"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var ctx = document.getElementById('salesChart').getContext('2d');
+
+        // Fetch data from the server
+        fetch('/sales_chart_data/')
+            .then(response => response.json())
+            .then(data => {
+                var salesChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.labels,
+                        datasets: [
+                            {
+                                label: 'Delivered',
+                                backgroundColor: 'green',
+                                data: data.delivered,
+                            },
+                            {
+                                label: 'Cancelled',
+                                backgroundColor: 'red',
+                                data: data.cancelled,
+                            },
+                            {
+                                label: 'Returned',
+                                backgroundColor: 'orange',
+                                data: data.returned,
+                            },
+                        ],
+                    },
+                    options: {
+                        scales: {
+                            x: {
+                                type: 'linear',
+                                position: 'bottom',
+                            },
+                            y: {
+                                beginAtZero: true,
+                            },
+                        },
+                    },
+                });
+
+                // Attach a click event to show details when a bar is clicked
+                salesChart.options.onClick = function (event, elements) {
+                    if (elements.length > 0) {
+                        var index = elements[0].index;
+                        showChartDetails(data.labels[index], data.delivered[index], data.cancelled[index], data.returned[index]);
+                    }
+                };
+            });
+
+        // Function to show chart details in the modal
+        function showChartDetails(label, delivered, cancelled, returned) {
+            var detailsContent = `
+                <p>Date: ${label}</p>
+                <p>Delivered: ${delivered}</p>
+                <p>Cancelled: ${cancelled}</p>
+                <p>Returned: ${returned}</p>
+            `;
+
+            document.getElementById('chartDetailsContent').innerHTML = detailsContent;
+            $('#chartDetailsModal').modal('show');
+        }
+    });
+</script>
+{% endblock %}

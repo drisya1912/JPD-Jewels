@@ -1,0 +1,44 @@
+{% extends 'adm/base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="my-5 p-3 bg-white border border-dark rounded">
+        <h2 class="fw-bold">Customers</h2>
+        <hr>
+        <table class="table">
+            <tr>
+                <th>Sl No.</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            {% for cus in customer %}
+
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ cus.get_full_name }}</td>
+                <td>{{ cus.email }}</td>
+                <td>
+                    {% if cus.is_active %}
+                        <p class="text-success fw-bold">Active</p>
+                    {% else %}
+                        <p class="text-danger fw-bold">Blocked</p>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if cus.is_active %}
+                        <a href="{% url 'customeraction' cus.id %}" class="btn btn-danger">Block</a>
+                    {% else %}
+                        <a href="{% url 'customeraction' cus.id %}" class="btn btn-success">Unblock</a>
+                    {% endif %}
+                </td>
+            </tr>
+
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+{% endblock %}

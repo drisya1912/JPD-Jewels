@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<div class="your-div-class">
+<div class="text-center">
+    {% for cat in cat %}
+       <button class="btn" style="background-color: steelblue; color: white; padding: 5px; margin-left: 10px; width: auto; text-align: center;">
+            <a href="{% url 'category' cat.id %}" style="text-decoration: none; color: inherit;">{{ cat.name }}</a>
+        </button>
+    {% endfor %}
+
+    <button class="btn btn-primary" style="background-color: steelblue; color: white; padding: 5px; margin-left: 10px; width: auto; text-align: center;" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Show more</button>
+</div>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas-header">
+            <h5 id="offcanvasRightLabel">Filter your choice</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    Brand
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    {% for brand in brand %}
+                        <li><a class="dropdown-item" href="{% url 'brand' brand.id %}">{{ brand.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+     <div class="container-fluid m-3">
+            <div class="row m-0">
+
+                {% for product in product %}
+                <div class="col-lg-3 col-md-6" >
+                    <img  style="width: auto; height: 200px" class="card-img-top" src="{{ product.img1.url }}" alt="Card image cap">
+                    <div class="card-body">
+                    <a href="{% url 'productview' product.id %}" class="text-decoration-none text-dark" >
+                    <h5 class="card-title">{{ product.Product_name }}</h5>
+                    <p  class="card-text">{{ product.Brand}}<br> ₹{{ product.price }}<br> Free delivery</p></a>
+                    <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary" style="margin-right: 10px;">Add to Cart</a>
+                    <a href="#" style="margin-left: 10px;"><i class="fas fa-heart" ></i></a>
+                    </div>
+                </div>
+
+                {% endfor %}
+
+        </div>
+
+        </div>
+
+{% endblock %}

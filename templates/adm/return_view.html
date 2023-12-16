@@ -1,0 +1,103 @@
+{% extends 'adm/base.html' %}
+
+{% block content %}
+
+<div class="container-fluid p-2">
+        <div class="row">
+            <div class="col-10 m-auto bg-white rounded shadow-sm p-3">
+                <h3 class="fw-bold text-center">Return</h3>
+                <hr>
+                <div class="p-3 shadow-sm d-flex justify-content-center align-items-center">
+    
+                    <table class="table table-borderless">
+                        <tr>
+                            <th>Customer & Address</th>
+                            <td>{{ returned.order.address}}</td>
+                        </tr>  
+                        <tr>
+                            <th>Mobile</th>
+                            <td>
+                               { {returned.order.address.phone }}
+                            </td>
+                        </tr>  
+                        <tr>
+                            <th>Order ID</th>
+                            <td>{{ returned.order.id }}</td>
+                        </tr>
+                        <tr>
+                            <th>Order Date</th>
+                            <td>{{ returned.order.created }}</td>
+                        </tr>
+                        <tr>
+                            <th style="vertical-align: middle;">Products</th>
+                            <td>
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th style="text-align: center; vertical-align: middle;">Quantity</th>
+                                        <th style="text-align: center; vertical-align: middle;">Image</th>
+                                    </tr>
+                                    {% for products in returned.order.order_items.all %}
+
+                                        <tr>
+                                            <td style="vertical-align: middle;">{{ products.product.Product_name }}</td>
+                                            <td style="text-align: center; vertical-align: middle;">{{ products.quantity }}</td>
+                                            <td style="text-align: center; vertical-align: middle;" ><img src="{{ products.product.img1.url }}" alt="" style="width: auto; height: 70px;"></td>
+                                        </tr>
+
+                                    {% endfor %}
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+{#                            <th>Total Quantity</th>#}
+{#                            <td><%=newOrders.totalQuantity%> Nos.</td>#}
+                        </tr>
+                        <tr>
+                            <th>Total Amount</th>
+                            <td>{{ returned.order.total_paid }}</td>
+                        </tr>
+                        <tr>
+                            <th>Payment Method</th>
+                            <td>{{ returned.order.billing_status }}</td>
+                        </tr>
+                        <tr>
+                            <th>Payment Status</th>
+                            <td>
+                                {% if returned.order.paid %}
+                                    paid
+                                {% else %}
+                                    not paid
+                                {% endif %}
+                            </td>
+{#                            <td>{{ order.paid }}</td>#}
+                        </tr>
+                        <tr>
+                            <th>Order Status</th>
+
+                            <td>{{ returned.return_status }}</td>
+                        </tr>
+                            <tr>
+                            {% if returned.return_status == returned.RETURN_PENDING %}
+                                <form method="post" action="">
+                                    {% csrf_token %}
+                                        <th>
+                                        <select name="status" class="form-select" required>
+                                            {% for status_value, status_display in returned.RETURN_STATUS_CHOICES %}
+                                                <option value="{{ status_value }}" {% if status_value == returned.status %}selected{% endif %}>{{ status_display }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        </th>
+                                    <td><input type="submit" value="Update" class="btn btn-primary"></td>
+                                </form>
+                            {% else %}
+                                <td colspan="2">Product {{ returned.return_status }}</td>
+                            {% endif %}
+                            </tr>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

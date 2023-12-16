@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}collection | JPDJewels{% endblock %}
+
+{% block content %}
+
+
+<div class="your-div-class">
+
+<div class="text-end pe-3">
+    <button class="btn btn-primary" style="background-color: steelblue; color: white; padding: 5px; margin-left: 10px; width: auto; text-align: center;" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Show more</button>
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasRightLabel">Filter your choice</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <h3 class="text-bold text-center">Filter Products</h3>
+            <hr>
+            <div>
+                <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#category-collapse" aria-expanded="true">
+                  Categories
+                </button>
+                <div class="collapse show ps-5" id="category-collapse">
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'collection' %}" class="{% if not active_category %}text-primary{% else %}text-secondary{% endif %}">All Category</a></li>
+                        {% for category_item in category %}
+                            <li>
+                                <a href="{% url 'collection' %}?category={{ category_item.id }}{% if active_brand %}&brand={{ active_brand }}{% endif %}"
+                                   class="{% if category_item.id == active_category %}text-primary{% else %}text-secondary{% endif %}">
+                                   {{ category_item.name }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div>
+                <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#brand-collapse" aria-expanded="true">
+                  Brands
+                </button>
+                {% if active_brand %}
+                    <div class="collapse show ps-5" id="brand-collapse">
+                {% else %}
+                    <div class="collapse ps-5" id="brand-collapse">
+                {% endif %}
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'collection' %}" class="{% if not active_brand %}text-primary{% else %}text-secondary{% endif %}">All Brands</a></li>
+                        {% for brand_item in brand %}
+                            <li>
+                                <a href="{% url 'collection' %}?brand={{ brand_item.id }}{% if active_category %}&category={{ active_category }}{% endif %}"
+                                   class="{% if brand_item.id == active_brand %}text-primary{% else %}text-secondary{% endif %}">
+                                   {{ brand_item.name }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+        <div style="border: 1px solid #ccc; padding: 15px; border-radius: 8px; margin: 20px; width: 300px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+            <div style="display: flex; flex-direction: column;">
+                <form method="get" action="{% url 'collection' %}">
+                    {% csrf_token %}
+
+                    <div style="margin-bottom: 15px;">
+                        <label for="min_price" style="margin-bottom: 5px;">Min Price:</label>
+                        <input type="number" name="min_price" id="min_price" style="width: 100%; padding: 8px; box-sizing: border-box;" placeholder="Min" value="{{ min_price }}">
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label for="max_price" style="margin-bottom: 5px;">Max Price:</label>
+                        <input type="number" name="max_price" id="max_price" style="width: 100%; padding: 8px; box-sizing: border-box;" required placeholder="Max" value="{{ max_price }}">
+                    </div>
+
+                    <!-- Include hidden inputs for active_category and active_brand if needed -->
+                    <input type="hidden" name="category" value="{{ active_category }}">
+                    <input type="hidden" name="brand" value="{{ active_brand }}">
+
+                    <button type="submit" style="cursor: pointer; background-color: #007bff; color: #fff; padding: 10px 15px; border: none; border-radius: 5px;" class="mt-3">Apply Filters</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+        <div class="container-fluid m-3">
+            <div class="row m-0">
+            {% for product in product %}
+            {% if product.active %}
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <img style="width: 200px; height: 200px; display: block; margin-left: auto; margin-right: auto;" class="card-img-top" src="{{ product.img1.url }}" alt="Card image cap">
+                        <div>
+                            <a href="{% url 'productview' product.id %}" class="text-decoration-none text-dark" >
+                            <h5 class="card-title" style="height: 50px; overflow: hidden;">{{ product.Product_name }}</h5>
+                            <p  class="card-text">{{ product.Brand}}<br> ₹{{ product.price }} <br> Free delivery</p></a>
+                            <div class="d-flex justify-content-between pt-3">
+                                {% if product.Stock > 0 %}
+                                    <a class="btn btn-primary fw-bold" href="{% url 'add_to_cart' product.id %}">Add to Cart</a>
+                                {% else %}
+                                    <button class="btn btn-primary fw-bold" disabled>Add to Cart</button>
+                                {% endif %}
+                                <a href="{% url 'addtowishlist' product.id %}"><i class="fa-regular fa-heart fs-5"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+
+        </div>
+        </div>
+</div>
+
+    <script>
+    $(document).on('click', function (e) {
+        if (!$(e.target).closest('.dropdown').length) {
+            $('.dropdown-menu').hide();
+        }
+    });
+
+    $('.dropdown-toggle').on('click', function (e) {
+        $('.dropdown-menu').toggle();
+        e.stopPropagation();
+    });
+    $(document).ready(function () {
+        $('#filterDropdown').on('show.bs.dropdown', function () {
+            $('#offcanvasRight').css('transform', 'translateX(-300px)');
+        });
+
+        $('#filterDropdown').on('hide.bs.dropdown', function () {
+            $('#offcanvasRight').css('transform', 'translateX(0)');
+        });
+    });
+</script>
+
+
+{% endblock %}

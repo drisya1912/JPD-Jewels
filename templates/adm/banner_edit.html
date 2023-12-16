@@ -1,0 +1,44 @@
+{% extends 'adm/base.html' %}
+
+{% block content %}
+
+    <div class="container-fluid">
+        <div class="row d-flex justify-content-center">
+            <div class="col-lg-6 col-12">
+                <div class="card p-5 my-5">
+                    <h4 class="text-center fw-bold">Add Product</h4>
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+                                <strong>Error! :</strong>{{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+
+                    {% endif %}
+                    <form action="{% url 'banner_edit_perform' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                        <div class="form-group py-2">
+                            <label for="bname" class="py-1">Banner Name</label>
+                            <input type="hidden" value="{{ banner.id  }}" name="id">
+                            <input type="text" value="{{ banner.banner_name }}" class="form-control" name="bname">
+                        </div>
+
+                        <div class="form-group py-2">
+                            <label for="img1" class="py-1">Image 1</label>
+                            <img src="{{ banner.img1.url }}" style="width: auto", height="50px">
+                            <input type="file" class="form-control" name="img1">
+                        </div>
+
+                        <div class="d-flex justify-content-end py-3">
+                            <input type="submit" value="Edit Brand" class="btn btn-success">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

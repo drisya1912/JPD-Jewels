@@ -1,0 +1,42 @@
+{% extends 'adm/base.html' %}
+
+{% block content %}
+
+
+
+
+<div class="container">
+    <div class="my-5 p-3 bg-white rounded">
+
+        <table class="table text-center w-75 m-auto">
+            <tr>
+                <th>Sl No</th>
+                <th>Brand Name</th>
+                <th colspan="2" >Action</th>
+            </tr>
+            {% for brand in brand %}
+
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ brand.name }}</td>
+                <td><a href="{% url 'brandedit' brand.id %}" class="btn btn-primary">Edit</a> </td>
+
+                <td>
+                    {% if brand.active %}
+                        <a href="{% url 'availabilitybrand' brand.id %}" class="btn btn-danger">Available</a>
+
+                    {% else %}
+                        <a href="{% url 'availabilitybrand' brand.id %}" class="btn btn-success">Non Available</a>
+                    {% endif %}
+                </td>
+            </tr>
+
+            {% endfor %}
+        </table>
+    <div class="d-flex justify-content-end w-75 m-auto p-2 px-5">
+                <a href="{% url 'addbrand' %}" class="btn btn-primary">Add Brand</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

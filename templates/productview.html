@@ -1,0 +1,138 @@
+
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ product.Product_name }} | JPDJewels{% endblock %}
+{% block content %}
+
+    <div class="container-fluid">
+        <div class="row d-flex justify-content-center p-5">
+            <div class="col-lg-6 col-12">
+                <div class="row product-img d-flex justify-content-center">
+
+                    <div class="col-12 my-2 d-flex justify-content-center" id="img-div" style="height: 350px; width:auto; overflow: hidden;">
+                        <img src="{{ product.img1.url }}" class="main-img img-fluid" style="transform-origin: center center; object-fit: cover; cursor: crosshair;">
+                    </div>
+                    <div class="col-md-2  col-2 col-sm-12 my-2">
+                        <img class="i1" src="{{ product.img1.url }}" style="width: 100px; height: 100px;" alt="">
+                    </div>
+                    <div class="col-md-2  col-3 my-2">
+                        <img class="i2" src="{{ product.img2.url }}" style="width: 100px; height: 100px;" alt="">
+                    </div>
+                    <div class="col-md-2  col-3 my-2">
+                        <img class="i3" src="{{ product.img3.url }}" style="width: 100px; height: 100px;" alt="">
+                    </div>
+                    <div class="col-md-2  col-3 my-2">
+                        <img class="i4" src="{{ product.img4.url }}" style="width: 100px; height: 100px;" alt="">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-12">
+                <table class="table">
+                    <tr>
+                        <td>Product Name</td>
+                        <th class="text-capitalize">{{ product.Product_name }}</th>
+                    </tr>
+                    <tr>
+                        <td>Description</td>
+                        <th class="text-capitalize">{{ product.Description }}</th>
+                    </tr>
+                    <tr>
+                        <td>Brand</td>
+                        <th class="text-capitalize">{{ product.Brand.name }}</th>
+                    </tr>
+                    <tr>
+                        <td>Category</td>
+                        <th class="text-capitalize">{{ product.Category.name }}</th>
+                    </tr>
+                    <tr>
+                        <td>Price</td>
+                        {% if offer %}
+                            {% if offer.discount_type == 'percentage' %}
+                                <th class="text-capitalize">
+                                    <span style="text-decoration: line-through;">₹ {{ product.price|floatformat:2 }}</span>
+                                    - ₹ {{ offer.discount_value }} off
+                                    <br>
+                                    ₹ {{ discounted_price|floatformat:2 }}
+                                    <br>
+                                    <span style="color: green;">(offer price)</span>
+                                </th>
+                            {% else %}
+                                <th class="text-capitalize">
+                                    <span style="text-decoration: line-through;">₹ {{ product.price|floatformat:2 }}</span>- ₹ {{ offer.discount_value }} off off
+                                    <div style="color: green;">₹ {{ discounted_price|floatformat:2 }} (offer price)</div>
+                                </th>
+                            {% endif %}
+                        {% else %}
+                            <th class="text-capitalize">₹ {{ product.price|floatformat:2 }}</th>
+                        {% endif %}
+                    </tr>
+
+
+
+
+                    <tr>
+                        <td>Availability</td>
+                        <th class="text-capitalize">
+                            {% if product.Stock > 0 %}
+                                <span class="text-success">Available</span>
+                            {% else %}
+                                <span class="text-danger">Out of Stock</span>
+                            {% endif %}
+                        </th>
+                    </tr>
+                </table>
+                <div class="my-5">
+                    {% if product.Stock > 0 %}
+                        <a class="btn btn-primary fw-bold" href="{% url 'add_to_cart' product.id %}" style="margin-right: 10px; color: white;">Add to Cart</a>
+                    {% else %}
+                        <button class="btn btn-primary fw-bold" disabled>Add to Cart</button>
+                    {% endif %}
+                    <a href="{% url 'addtowishlist' product.id %}" class="btn btn-primary fw-bold" style="color: white;">Add to wish list</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script>
+const container = document.getElementById("img-div");
+    const img = document.querySelector(".main-img");
+
+    container.addEventListener("mousemove", onZoom);
+    container.addEventListener("mouseover", onZoom);
+    container.addEventListener("mouseleave", offZoom);
+
+    function onZoom(e) {
+        const x = e.clientX - e.target.offsetLeft;
+        const y = e.clientY - e.target.offsetTop;
+
+        img.style.transformOrigin = `${x}px ${y}px`;
+        img.style.transform = "scale(1.5)";
+    }
+
+    function offZoom(e) {
+        img.style.transformOrigin =`center center`;
+        img.style.transform = "scale(1)";
+    }
+
+    const thumbnail1 = document.querySelector(".i1");
+    const thumbnail2 = document.querySelector(".i2");
+    const thumbnail3 = document.querySelector(".i3");
+    const thumbnail4 = document.querySelector(".i4");
+
+    thumbnail1.addEventListener("click", () => updateMainImage("{{ product.img1.url }}"));
+    thumbnail2.addEventListener("click", () => updateMainImage("{{ product.img2.url }}"));
+    thumbnail3.addEventListener("click", () => updateMainImage("{{ product.img3.url }}"));
+    thumbnail4.addEventListener("click", () => updateMainImage("{{ product.img4.url }}"));
+
+    function updateMainImage(imageUrl) {
+        const mainImage = document.querySelector(".main-img");
+        mainImage.src = imageUrl;
+    }
+</script>
+{% endblock %}
+

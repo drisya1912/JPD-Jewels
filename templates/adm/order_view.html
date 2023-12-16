@@ -1,0 +1,98 @@
+{% extends 'adm/base.html' %}
+
+{% block content %}
+
+<div class="container-fluid p-2">
+        <div class="row">
+            <div class="col-10 m-auto bg-white rounded shadow-sm p-3">
+                <h3 class="fw-bold text-center">Order</h3>
+                <hr>
+                <div class="p-3 shadow-sm d-flex justify-content-center align-items-center">
+    
+                    <table class="table table-borderless">
+                        <tr>
+                            <th>Customer & Address</th>
+                            <td>{{ order.address}}</td>
+                        </tr>  
+                        <tr>
+                            <th>Mobile</th>
+                            <td>
+                               {{ order.address.phone }}
+                            </td>
+                        </tr>  
+                        <tr>
+                            <th>Order ID</th>
+                            <td>{{ order.id }}</td>
+                        </tr>
+                        <tr>
+                            <th>Order Date</th>
+                            <td>{{ order.created }}</td>
+                        </tr>
+                        <tr>
+                            <th style="vertical-align: middle;">Products</th>
+                            <td>
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th style="text-align: center; vertical-align: middle;">Quantity</th>
+                                        <th style="text-align: center; vertical-align: middle;">Image</th>
+                                    </tr>
+                                    {% for products in order.order_items.all %}
+
+                                        <tr>
+                                            <td style="vertical-align: middle;">{{ products.product.Product_name }}</td>
+                                            <td style="text-align: center; vertical-align: middle;">{{ products.quantity }}</td>
+                                            <td style="text-align: center; vertical-align: middle;" ><img src="{{ products.product.img1.url }}" alt="" style="width: auto; height: 70px;"></td>
+                                        </tr>
+
+                                    {% endfor %}
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+{#                            <th>Total Quantity</th>#}
+{#                            <td><%=newOrders.totalQuantity%> Nos.</td>#}
+                        </tr>
+                        <tr>
+                            <th>Total Amount</th>
+                            <td>{{ order.total_paid }}</td>
+                        </tr>
+                        <tr>
+                            <th>Payment Method</th>
+                            <td>{{ order.billing_status }}</td>
+                        </tr>
+                        <tr>
+                            <th>Payment Status</th>
+                            <td>
+                                {% if order.paid %}
+                                    paid
+                                {% else %}
+                                    not paid
+                                {% endif %}
+                            </td>
+{#                            <td>{{ order.paid }}</td>#}
+                        </tr>
+                        <tr>
+                            <th>Order Status</th>
+                            <td>{{ order.status }}</td>
+                        </tr>
+
+                        <tr>
+                            <form method="post" action="">
+                            {% csrf_token %}
+                                <th>
+                                    <select name="status" class="form-select" required>
+                                        {% for status_value, status_display in order.ORDER_STATUS_CHOICES %}
+                                            <option value="{{ status_value }}" {% if status_value == order.status %}selected{% endif %}>{{ status_display }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </th>
+                                <td><input type="submit" value="Update" class="btn btn-primary"></td>
+                            </form>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

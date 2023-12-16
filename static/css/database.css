@@ -1,0 +1,39 @@
+.navbar {
+    z-index: 1000;
+}
+.steel-blue-bg {
+  background-color: steelblue;
+  color: white;
+}
+
+.steel-blue-bg .navbar {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.steel-blue-bg {
+  background-color: steelblue;
+  color: white;
+}
+.bg-custom-first{
+
+    height: 80px;
+}
+.container-fluid{
+    /*margin-bottom: 200px;*/
+}
+.my-custom-div{
+    display: flex;
+    justify-content: center;
+}
+
+
+.custom-div {
+    height: 100px;
+    border: 2px solid black;
+
+}
+.my-custom-div{
+    height: 500px;
+    border: 1px solid black;
+}

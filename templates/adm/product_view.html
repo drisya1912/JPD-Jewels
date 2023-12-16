@@ -1,0 +1,95 @@
+{% extends 'adm/base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row p-2">
+        <div class="col-lg-6 ">
+            <div class="row">
+                <div class="col-3 col-md-6 p-2">
+                    <img src="{{ product.img1.url }}" style="height: 250px; width: auto; box-shadow: 0px 0px 4px rgba(0,0,0,0.5)">
+                </div>
+                <div class="col-3 col-md-6 p-2">
+                    <img src="{{ product.img2.url }}" style="height: 250px; width: auto; box-shadow: 0px 0px 4px rgba(0,0,0,0.5)">
+                </div>
+                <div class="col-3 col-md-6 p-2">
+                    <img src="{{ product.img3.url }}" style="height: 250px; width: auto; box-shadow: 0px 0px 4px rgba(0,0,0,0.5)">
+                </div>
+                <div class="col-3 col-md-6 p-2">
+                    <img src="{{ product.img4.url }}" style="height: 250px; width: auto; box-shadow: 0px 0px 4px rgba(0,0,0,0.5)">
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <table class="table table-borderless ">
+                <tr>
+                    <th>Product Name</th>
+                    <td>{{ product.Product_name }}</td>
+                </tr>
+                <tr>
+                    <th>Description</th>
+                    <td>{{ product.Description }}</td>
+                </tr>
+                <tr>
+                    <th>Brand</th>
+                    <td>{{ product.Brand }}</td>
+                </tr>
+                <tr>
+                    <th>Category</th>
+                    <td>{{ product.Category }}</td>
+                </tr>
+                <tr>
+                    <th>Stock</th>
+                    <td>{{ product.Stock }}</td>
+                </tr>
+                <tr>
+                    <th>Price</th>
+                    <td>{{ product.price }}</td>
+                </tr>
+
+            </table>
+            <a href="{% url 'productedit' product.id %}" class="btn btn-primary">Edit</a>
+            <a href="#" class="btn btn-danger" onclick="showConfirmation()">Delete</a>
+            {% if product.active %}
+            <a href="{% url 'block_product' product.id %}" class="btn btn-warning">unlist</a>
+            {% else %}
+            <a href="{% url 'block_product' product.id %}" class="btn btn-success">list</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="delete-confirmation" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #fff; padding: 20px; border: 1px solid #ccc; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); text-align: center; z-index: 1000; opacity: 0; transition: opacity 0.3s ease;">
+    <h2>Confirm Deletion</h2>
+    <p>Are you sure you want to delete this product?</p>
+
+    <form method="post" action="{% url 'delete_product' uid=product.id %}">
+        {% csrf_token %}
+        <button type="submit" style="background-color: #ff4747; color: #fff; border: none; padding: 10px 20px; cursor: pointer;">Delete</button>
+        <a href="#" onclick="hideConfirmation()" style="color: #333; text-decoration: none; margin-left: 10px;">Cancel</a>
+    </form>
+</div>
+
+<script>
+    function showConfirmation() {
+        var confirmationModal = document.querySelector('.delete-confirmation');
+        confirmationModal.style.display = 'block';
+        setTimeout(function () {
+            confirmationModal.style.opacity = '1';
+        }, 10);
+    }
+
+    function hideConfirmation() {
+        var confirmationModal = document.querySelector('.delete-confirmation');
+        confirmationModal.style.opacity = '0';
+        setTimeout(function () {
+            confirmationModal.style.display = 'none';
+        }, 300);
+    }
+</script>
+
+{% endblock %}
+
+
+
