@@ -16,6 +16,7 @@ from core.models import Coupon
 from core.otp import send_otp
 from order.models import Order, ReturnedProduct, Wallet
 from user_account.models import Address, User_profile, WishItem
+from administrator.models import Offer
 
 # Create your views here.
 @never_cache
@@ -332,9 +333,11 @@ def couponshow(request):
 def wish_list(request):
     wish_items = WishItem.objects.filter(user=request.user)
     product_list = [wish_item.product for wish_item in wish_items]
+    # offer = Offer.objects.filter(product_id=uid, start_date__lte=timezone.now(), end_date__gte=timezone.now()).first()
     context = {
         "wish_items": wish_items,
         "products": product_list,
+        # "offer" : offer
     }
     return render(request, 'wish.html', context)
 

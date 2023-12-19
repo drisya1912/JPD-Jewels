@@ -7,7 +7,7 @@ SECRET_KEY = 'django-insecure-%6m$@0ls9no3_rl&qr3f(9$-0obcqwo1yw7w2zoh60n5foj9tg
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['16.171.200.42', '127.0.0.1:8000']
+ALLOWED_HOSTS = ['16.171.200.42', '127.0.0.1', 'jpd-jewels.shop']
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
