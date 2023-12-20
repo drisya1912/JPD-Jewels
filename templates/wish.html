@@ -8,58 +8,55 @@
   <div class="container">
     <div class="row">
       <!-- Wishlist Items -->
-      <div class="col-lg-9">
-        <h3 class="fw-bold text-secondary mb-4">Your Wish List</h3>
+      <!-- Wishlist Items -->
+<div class="col-lg-9">
+    <h3 class="fw-bold text-secondary mb-4">Your Wish List</h3>
 
-        <!-- Wishlist Item 1 -->
-          {% for item in wish_items %}
-        <div class="card mb-4">
-          <div class="row g-0">
+    {% for product_id, info in product_info.items %}
+    <div class="card mb-4">
+        <div class="row g-0">
             <div class="col-md-4">
-                {% if item.product.img1 %}
-                <img src="{{item.product.img1.url}}" class="img-fluid rounded-start" alt="Item 1 Image">
+                {% if info.product.img1 %}
+                <img src="{{ info.product.img1.url }}" class="img-fluid rounded-start" alt="Item Image">
                 {% else %}
                 <img src="{% static 'images/n-1' %}">
                 {% endif %}
             </div>
             <div class="col-md-8">
-              <div class="card-body">
-                  <a href="{% url 'productview' item.product.id %}" class="text-decoration-none text-dark" >
-                    <h5 class="card-title">{{ item.product.Product_name}}</h5>
-                    <p class="card-text">{{ item.product.Description}}</p>
+                <div class="card-body">
+                    <a href="{% url 'productview' info.product.id %}" class="text-decoration-none text-dark">
+                        <h5 class="card-title">{{ info.product.Product_name }}</h5>
+                        <p class="card-text">{{ info.product.Description }}</p>
 
-                    {% if offer %}
-                        <p class="card-text">
-                            <span style="text-decoration: line-through;">₹{{ item.product.price }}</span><br>
-                            ₹{{ item.product.get_discounted_price|floatformat:2 }}<br>
-                            Free delivery
-                        </p>
-                    {% else %}
-                          <p class="card-text">₹{{ item.product.price }}<br> Free delivery</p>
-                    {% endif %}
+                        {% if info.discounted_price %}
+                            <p class="card-text">
+                                <span style="text-decoration: line-through;">₹{{ info.product.price }}</span><br>
+                                ₹{{ info.discounted_price|floatformat:2 }}<br>
+                                Free delivery
+                            </p>
+                        {% else %}
+                            <p class="card-text">₹{{ info.product.price }}<br> Free delivery</p>
+                        {% endif %}
 
+                        <!-- Additional information about the offer can be displayed here -->
 
-
-{#                      <p class="card-text">{{ item.product.price}}</p></a>#}
-                  <div class="d-flex justify-content-between pt-3">
-                      <a class="btn btn-primary fw-bold" href="{% url 'add_to_cart' item.product.id %}">Add to Cart</a>>
-                    <form action="{% url 'remove_from_wishlist' item.id %}" method="post">
-                        {% csrf_token %}
-                        <input type="submit" value="Remove" class="btn btn-danger">
-                    </form>
-                  </div></a>
-              </div>
+                        <div class="d-flex justify-content-between pt-3">
+                            <a class="btn btn-primary fw-bold" href="{% url 'add_to_cart' info.product.id %}">Add to Cart</a>
+                            <form action="{% url 'remove_from_wishlist' info.wish %}" method="post">
+                                {% csrf_token %}
+                                <input type="submit" value="Remove" class="btn btn-danger">
+                            </form>
+                        </div>
+                    </a>
+                </div>
             </div>
-          </div>
         </div>
-      {% endfor %}
-        <!-- Wishlist Item 1 -->
+    </div>
+    {% endfor %}
 
+</div>
+<!-- Wishlist Items -->
 
-
-        <!-- Add more Wishlist Items as needed -->
-
-      </div>
       <!-- Wishlist Items -->
 
       <!-- Sidebar or Additional Information -->

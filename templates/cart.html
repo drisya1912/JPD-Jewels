@@ -60,11 +60,11 @@
           <div class="card-body">
             <div class="d-flex justify-content-between">
                 <p class="text-secondary">Price</p>
-                <p class="text-secondary fw-bold">{{ cart_total_price }}</p>
+                <p class="text-secondary fw-bold">{{ cart_total_price|floatformat:2 }}</p>
             </div>
               <div class="d-flex justify-content-between">
                 <p class="text-secondary">Discount Price</p>
-                <p class="text-secondary fw-bold">{{ discount_price }}</p>
+                <p class="text-secondary fw-bold">{{ discount_price|floatformat:2 }}</p>
             </div>
 
 

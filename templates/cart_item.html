@@ -24,7 +24,7 @@
                 </div>
             </div>
         </div>
-        <p class="fw-bold text-secondary m-0">$ {{ item.total_price }}</p>
+        <p class="fw-bold text-secondary m-0">$ {{ item.total_price|floatformat:2 }}</p>
 
     </div>
 {% endif %}

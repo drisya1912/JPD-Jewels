@@ -332,17 +332,34 @@ def couponshow(request):
 @login_required
 def wish_list(request):
     wish_items = WishItem.objects.filter(user=request.user)
-    product = ''
-    offer = ''
-    for item in wish_items:
-        product = item.product
-        offer_product = Offer.objects.filter(product=product, start_date__lte=timezone.now(), end_date__gte=timezone.now())
-        for i in offer_product:
-            offer = i.product
+
+    # Create a dictionary to store product and offer details
+    product_info = {}
+
+    for wish_item in wish_items:
+        product = wish_item.product
+
+        # Check if there is an active offer for the product
+        offer = Offer.objects.filter(product=product, start_date__lte=timezone.now(),
+                                     end_date__gte=timezone.now()).first()
+
+        # Calculate the discounted price if there is an offer
+        discounted_price = None
+        if offer:
+            if offer.discount_type == 'percentage':
+                discounted_price = product.price - (product.price * offer.discount_value / 100)
+            elif offer.discount_type == 'fixed':
+                discounted_price = product.price - offer.discount_value
+
+        product_info[product.id] = {
+            'wish': wish_item.id,
+            'product': product,
+            'offer': offer,
+            'discounted_price': discounted_price,
+        }
+
     context = {
-        "wish_items": wish_items,
-        "products": product,
-        "offer": offer
+        'product_info': product_info,
     }
     return render(request, 'wish.html', context)
 
