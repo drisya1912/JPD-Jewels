@@ -332,12 +332,17 @@ def couponshow(request):
 @login_required
 def wish_list(request):
     wish_items = WishItem.objects.filter(user=request.user)
-    product_list = [wish_item.product for wish_item in wish_items]
-    # offer = Offer.objects.filter(product_id=uid, start_date__lte=timezone.now(), end_date__gte=timezone.now()).first()
+    product = ''
+    offer = ''
+    for item in wish_items:
+        product = item.product
+        offer_product = Offer.objects.filter(product=product, start_date__lte=timezone.now(), end_date__gte=timezone.now())
+        for i in offer_product:
+            offer = i.product
     context = {
         "wish_items": wish_items,
-        "products": product_list,
-        # "offer" : offer
+        "products": product,
+        "offer": offer
     }
     return render(request, 'wish.html', context)
 
@@ -376,6 +381,8 @@ def cancel_order(request, order_id):
         product = item.product
         product.Stock += item.quantity
         product.save()
+    if order.paid:
+        Wallet.objects.create(user=request.user, order=order, amount=order.total_paid, balance_type=Wallet.CREDIT)
     messages.success(request, 'Order successfully cancelled.')
     return redirect('profile')
 

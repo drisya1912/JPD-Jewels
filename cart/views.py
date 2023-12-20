@@ -6,7 +6,7 @@ from administrator.models import Product
 from cart.models import CartItem
 from core.forms import CouponForm
 from core.models import Coupon
-from user_account.models import Applied_coupon
+from user_account.models import Applied_coupon, WishItem
 
 
 # Create your views here.
@@ -22,11 +22,15 @@ def add_to_cart(request, id):
         except ValueError:
             return redirect(default_url)
     else:
+        wish = WishItem.objects.filter(product=product)
         item = CartItem.objects.create(product=product, quantity=1)
         if request.user:
             item.user = request.user
             item.save()
             messages.success(request, f"{product.Product_name} has been added to your cart.")
+        if wish.exists():
+            for item in wish:
+                item.delete()
         default_url = '/'
         referer = request.META.get('HTTP_REFERER', default_url)
         try:
@@ -42,7 +46,8 @@ def cart(request):
     cart_total_price = sum(item.total_price() for item in cart)
     discount_price = int(0)
     coupon_form = CouponForm(request.POST)
-    coupon = ''
+    code = ""
+    coupon = ""
 
     if coupon_form.is_valid():
         code = coupon_form.cleaned_data['code']
@@ -56,12 +61,12 @@ def cart(request):
                     messages.error(request, "invalid coupon")
                     return redirect('cart')
                 total_price -= coupon.discount
-                request.session['coupon'] = code
                 discount_price = coupon.discount
                 messages.success(request, f'Coupon {code} applied successfully!')
             except Coupon.DoesNotExist:
                 messages.error(request, 'Invalid coupon code.')
 
+    request.session['coupon'] = code
     request.session['total_price'] = int(total_price)
     request.session['discount_price'] = discount_price
     return render(request, 'cart.html', {'cart': cart, 'total_price': total_price, 'coupon_form': coupon_form, 'coupon': coupon, 'cart_total_price': cart_total_price, 'discount_price': discount_price})

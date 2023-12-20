@@ -28,7 +28,7 @@
                     <h5 class="card-title">{{ item.product.Product_name}}</h5>
                     <p class="card-text">{{ item.product.Description}}</p>
 
-                    {% if item.product.get_discounted_price %}
+                    {% if offer %}
                         <p class="card-text">
                             <span style="text-decoration: line-through;">₹{{ item.product.price }}</span><br>
                             ₹{{ item.product.get_discounted_price|floatformat:2 }}<br>
@@ -42,13 +42,12 @@
 
 {#                      <p class="card-text">{{ item.product.price}}</p></a>#}
                   <div class="d-flex justify-content-between pt-3">
-                    <a class="btn btn-primary fw-bold" href="{% url 'add_to_cart' item.product.id %}">Add to Cart</a>
+                      <a class="btn btn-primary fw-bold" href="{% url 'add_to_cart' item.product.id %}">Add to Cart</a>>
                     <form action="{% url 'remove_from_wishlist' item.id %}" method="post">
                         {% csrf_token %}
                         <input type="submit" value="Remove" class="btn btn-danger">
                     </form>
-                  </div>
-
+                  </div></a>
               </div>
             </div>
           </div>
